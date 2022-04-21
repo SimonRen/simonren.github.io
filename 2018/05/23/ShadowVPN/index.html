@@ -1,0 +1,39 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><title> ShadowVPN安装使用 · Notebook</title><meta name="description" content="ShadowVPN安装使用 - Simon Ren"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="icon" href="/favicon.png"><link rel="stylesheet" href="/css/apollo.css"><link rel="search" type="application/opensearchdescription+xml" href="http://yoursite.com/atom.xml" title="Notebook"><meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="Notebook" type="application/atom+xml">
+</head><body><div class="wrap"><header><a href="/" class="logo-link"><img src="/favicon.png" alt="logo"></a><ul class="nav nav-list"><li class="nav-list-item"><a href="/" target="_self" class="nav-list-link">BLOG</a></li><li class="nav-list-item"><a href="/archives/" target="_self" class="nav-list-link">ARCHIVE</a></li></ul></header><main class="container"><div class="post"><article class="post-block"><h1 class="post-title">ShadowVPN安装使用</h1><div class="post-info">May 23, 2018</div><div class="post-content"><h2 id="服务端-以Ubuntu为例"><a href="#服务端-以Ubuntu为例" class="headerlink" title="服务端(以Ubuntu为例)"></a>服务端(以Ubuntu为例)</h2><p>修改apt仓库文件</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim /etc/apt/sources.list</span><br></pre></td></tr></table></figure>
+<p>添加</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">deb http://shadowvpn.org/debian wheezy main</span><br></pre></td></tr></table></figure>
+<p>之后安装软件</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">apt-get update</span><br><span class="line">apt-get install shadowvpn</span><br><span class="line">apt-get install fail2ban</span><br></pre></td></tr></table></figure>
+
+<p>修改shadowvpn配置文件</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">vim /etc/shadowvpn/server.conf</span><br><span class="line"></span><br><span class="line">password=308c7be12c1689f3</span><br><span class="line">port=2222</span><br><span class="line">mtu=1530</span><br><span class="line">token=308c7be12c1689f3</span><br></pre></td></tr></table></figure>
+<p>password和token可用这个命令生成</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">xxd -l 8 -p /dev/random</span><br></pre></td></tr></table></figure>
+<p>最佳mtu计算方法 <a target="_blank" rel="noopener" href="https://github.com/clowwindy/ShadowVPN/issues/77">原文地址</a></p>
+<blockquote>
+<p>我的现象和你的一样，是mtu的问题，默认的mtu值对于你的网络环境来说太高了。测试自己的mtu是多少，然后做减法<br>for wireless network,I advice you to test your real mtu value. for reference：<br>MTU of PPPoE #53<br>Max MTU: How do I find mine?<br>for windows<br><code>ping -f -l 1472 www.baidu.com</code><br>for linux<br><code>ping -s 1472 www.baidu.com</code><br>for example,my mtu is 1452,and the mtu value in client.conf server.conf should be 1452-20-8-24=1400</p>
+</blockquote>
+<p>多层转发可以使用socat来处理</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">socat UDP4-RECVFROM:2222,fork UDP4-SENDTO:1.1.1.1:2222</span><br></pre></td></tr></table></figure>
+
+<h2 id="客户端-以Openwrt为例"><a href="#客户端-以Openwrt为例" class="headerlink" title="客户端(以Openwrt为例)"></a>客户端(以Openwrt为例)</h2><p>下载地址<br><a target="_blank" rel="noopener" href="https://sourceforge.net/projects/openwrt-dist/files/shadowvpn/">https://sourceforge.net/projects/openwrt-dist/files/shadowvpn/</a><br><a target="_blank" rel="noopener" href="https://github.com/aa65535/openwrt-shadowvpn/releases">https://github.com/aa65535/openwrt-shadowvpn/releases</a><br>依赖包<br><a target="_blank" rel="noopener" href="https://sourceforge.net/projects/openwrt-dist/files/depends-libs/">https://sourceforge.net/projects/openwrt-dist/files/depends-libs/</a></p>
+<ul>
+<li>移除 /etc/hotplug.d/iface/30-shadowvpn</li>
+<li>清空 client_up.sh 和 client_down.sh</li>
+<li>去掉wan口的<code>Use Default Gateway</code></li>
+<li>建立新的interface命名为tun, ip: 10.7.0.2, gateway: 10.7.0.1</li>
+<li>建立新的firewall zone命名为tun zone, 添加interface tun到tun zone, 允许lan=&gt;tun, tun=&gt;wan</li>
+<li>建立新的静态路由<ul>
+<li>tun : 0.0.0.0 : 10.7.0.1 : 5 : empty</li>
+<li>(adsl) wan : server-ip : 0.0.0.0 : empty : 10 : empty</li>
+<li>(dhcp) wan : server-ip : dhcp-gateway : empty : 10 : empty</li>
+</ul>
+</li>
+<li>修改shadowvpn.conf文件,填写对应的server, port, password, token</li>
+<li>/etc/init.d/shadowvpn restart</li>
+<li><code>ip route</code> 或者 <code>route</code> 查看核对当前路由信息</li>
+<li>自启动 (待完成)</li>
+</ul>
+<span id="more"></span>
+</div></article></div></main><footer><div class="paginator"><a href="/2018/05/23/Shadowsocks/" class="prev">PREV</a></div><div class="copyright"><p>© 2015 - 2022 <a href="http://yoursite.com">Simon Ren</a>, powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and <a href="https://github.com/pinggod/hexo-theme-apollo" target="_blank">hexo-theme-apollo</a>.</p></div></footer></div><script async src="//cdn.bootcss.com/mathjax/2.7.0/MathJax.js?config=TeX-MML-AM_CHTML" integrity="sha384-crwIf/BuaWM9rM65iM+dWFldgQ1Un8jWZMuh3puxb8TOY9+linwLoI7ZHZT+aekW" crossorigin="anonymous"></script></body></html>
