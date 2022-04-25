@@ -6,7 +6,7 @@
   <link href="http://yoursite.com/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2022-04-21T01:52:23.875Z</updated>
+  <updated>2022-04-25T14:08:00.725Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -21,12 +21,95 @@
     <link href="http://yoursite.com/2022/04/21/Golang/"/>
     <id>http://yoursite.com/2022/04/21/Golang/</id>
     <published>2022-04-21T01:00:00.000Z</published>
-    <updated>2022-04-21T01:52:23.875Z</updated>
+    <updated>2022-04-25T14:08:00.725Z</updated>
     
-    <content type="html"><![CDATA[<p>So, here we go</p><span id="more"></span>]]></content>
+    <content type="html"><![CDATA[<h3 id="Go程序执行顺序"><a href="#Go程序执行顺序" class="headerlink" title="Go程序执行顺序"></a>Go程序执行顺序</h3><p>按顺序导入所有被<code>main</code>包引用的包，并为每个包执行<code>init</code>函数。导入包完成后，为<code>main</code>执行<code>init</code>函数，并开始启动<code>main</code>。</p><h3 id="init函数"><a href="#init函数" class="headerlink" title="init函数"></a><code>init</code>函数</h3><p><code>init</code>函数无参数，无返回值，优先于<code>main</code>函数执行。初始化时总是单线程执行，并且严格按照包的依赖关系进行。每个源文件只能有一个<code>init</code>函数。</p><h3 id="const类型"><a href="#const类型" class="headerlink" title="const类型"></a><code>const</code>类型</h3><p>没有定义类型的const对象，可以在第一次被使用时确定类型。确定后该常量将无法再隐式转为其他类型。</p><figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> aa, bb, cc = <span class="string">&quot;eat&quot;</span>, <span class="number">2</span>, <span class="string">&quot;ok&quot;</span></span><br><span class="line"><span class="keyword">const</span> (</span><br><span class="line">    a = <span class="literal">iota</span></span><br><span class="line">    b</span><br><span class="line">    c</span><br><span class="line">)</span><br></pre></td></tr></table></figure><h3 id="默认值"><a href="#默认值" class="headerlink" title="默认值"></a>默认值</h3><p>golang中所有的变量都是初始化过的。</p><table><thead><tr><th align="left">类型</th><th align="left">初始值</th></tr></thead><tbody><tr><td align="left">int</td><td align="left"><code>0</code></td></tr><tr><td align="left">float</td><td align="left"><code>0.0</code></td></tr><tr><td align="left">bool</td><td align="left"><code>false</code></td></tr><tr><td align="left">string</td><td align="left"><code>&quot;&quot;</code></td></tr><tr><td align="left">pointer</td><td align="left"><code>nil</code></td></tr></tbody></table><h3 id="变量赋值"><a href="#变量赋值" class="headerlink" title="变量赋值"></a>变量赋值</h3><figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> a, b, c <span class="keyword">int</span></span><br><span class="line">a, b, c = <span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span></span><br><span class="line">a, b = b, a</span><br></pre></td></tr></table></figure><h3 id="fmt"><a href="#fmt" class="headerlink" title="fmt"></a><code>fmt</code></h3><table><thead><tr><th align="right">fmt</th><th align="left">意义</th><th align="right">例子</th><th align="left">输出</th></tr></thead><tbody><tr><td align="right">%d</td><td align="left">整数</td><td align="right"><code>fmt.Printf(&quot;%d&quot;, 3)</code></td><td align="left">3</td></tr><tr><td align="right">%x</td><td align="left">16进制</td><td align="right"><code>fmt.Printf(&quot;%x&quot;, 11)</code></td><td align="left">b</td></tr><tr><td align="right">%X</td><td align="left">16进制</td><td align="right"><code>fmt.Printf(&quot;%X&quot;,11)</code></td><td align="left">B</td></tr><tr><td align="right">%.mg</td><td align="left">保留几位有效数字</td><td align="right"><code>fmt.Printf(&quot;%.5g&quot;, 1234.5678)</code></td><td align="left">1234.6</td></tr><tr><td align="right">%f</td><td align="left">浮点数</td><td align="right"><code>fmt.Printf(&quot;%f&quot;, 1234.5678)</code></td><td align="left">1234.567800</td></tr><tr><td align="right">%e</td><td align="left">科学计数</td><td align="right"><code>fmt.Printf(&quot;%e&quot;, 1234.5678)</code></td><td align="left">1.234568e+03</td></tr></tbody></table><h3 id="数字强转"><a href="#数字强转" class="headerlink" title="数字强转"></a>数字强转</h3><p>浮点类型强转int时采用截断的方式：</p><figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> := <span class="number">3.9</span></span><br><span class="line">fmt.Printf(<span class="string">&quot;%d&quot;</span>, <span class="keyword">int32</span>(a))</span><br><span class="line"></span><br><span class="line">&gt; <span class="number">3</span></span><br></pre></td></tr></table></figure><span id="more"></span><h3 id="字符串"><a href="#字符串" class="headerlink" title="字符串"></a>字符串</h3><figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">unicode.IsLetter(ch) <span class="comment">// 是否为字母</span></span><br><span class="line">unicode.IsDigit(ch) <span class="comment">// 是否为数字</span></span><br><span class="line">unicode.IsSpace(ch) <span class="comment">// 是否为空格</span></span><br><span class="line"></span><br><span class="line">s3 := s1 + s2</span><br><span class="line"></span><br><span class="line">strings.HasPrefix(s, prefix <span class="keyword">string</span>) <span class="keyword">bool</span></span><br><span class="line">strings.HasSuffix(s, suffix <span class="keyword">string</span>) <span class="keyword">bool</span></span><br><span class="line">strings.Contains(s, substr <span class="keyword">string</span>) <span class="keyword">bool</span></span><br><span class="line">strings.Index(s, str <span class="keyword">string</span>) <span class="keyword">int</span></span><br><span class="line">strings.LastIndex(s, str <span class="keyword">string</span>) <span class="keyword">int</span></span><br><span class="line">strings.Replace(str, old, <span class="built_in">new</span>, n) <span class="keyword">string</span> <span class="comment">// (n == -1 replace all )</span></span><br><span class="line">strings.Count(s, str <span class="keyword">string</span>) <span class="keyword">int</span></span><br><span class="line">strings.Repeat(s, count <span class="keyword">int</span>) <span class="keyword">string</span></span><br><span class="line">strings.ToLower(s) <span class="keyword">string</span></span><br><span class="line">strings.ToUpper(s) <span class="keyword">string</span></span><br><span class="line"></span><br><span class="line">strings.TrimSpace(s) <span class="keyword">string</span> <span class="comment">// 剔除开头和结尾的空白符号</span></span><br><span class="line">strings.Trim(s, <span class="string">&quot;cut&quot;</span>) <span class="keyword">string</span> <span class="comment">// 剔除开头和结尾的指定字符</span></span><br><span class="line">strings.TrimLeft(s, <span class="string">&quot;cut&quot;</span>) <span class="keyword">string</span></span><br><span class="line">strings.TrimRight(s, <span class="string">&quot;cut&quot;</span>) <span class="keyword">string</span></span><br><span class="line"></span><br><span class="line">strings.Fields(s) []<span class="keyword">string</span> <span class="comment">// split with space</span></span><br><span class="line">strings.Split(s, sep) []<span class="keyword">string</span> <span class="comment">// split with sep</span></span><br><span class="line">strings.Join(sl []<span class="keyword">string</span>, sep <span class="keyword">string</span>) <span class="keyword">string</span> <span class="comment">// join with sep</span></span><br></pre></td></tr></table></figure><p><code>strconv</code>包含有所有和字符串相关的转换，任何类型车字符串总是成功的。</p>]]></content>
     
     
-    <summary type="html">&lt;p&gt;So, here we go&lt;/p&gt;</summary>
+    <summary type="html">&lt;h3 id=&quot;Go程序执行顺序&quot;&gt;&lt;a href=&quot;#Go程序执行顺序&quot; class=&quot;headerlink&quot; title=&quot;Go程序执行顺序&quot;&gt;&lt;/a&gt;Go程序执行顺序&lt;/h3&gt;&lt;p&gt;按顺序导入所有被&lt;code&gt;main&lt;/code&gt;包引用的包，并为每个包执行&lt;code&gt;init&lt;/code&gt;函数。导入包完成后，为&lt;code&gt;main&lt;/code&gt;执行&lt;code&gt;init&lt;/code&gt;函数，并开始启动&lt;code&gt;main&lt;/code&gt;。&lt;/p&gt;
+&lt;h3 id=&quot;init函数&quot;&gt;&lt;a href=&quot;#init函数&quot; class=&quot;headerlink&quot; title=&quot;init函数&quot;&gt;&lt;/a&gt;&lt;code&gt;init&lt;/code&gt;函数&lt;/h3&gt;&lt;p&gt;&lt;code&gt;init&lt;/code&gt;函数无参数，无返回值，优先于&lt;code&gt;main&lt;/code&gt;函数执行。初始化时总是单线程执行，并且严格按照包的依赖关系进行。每个源文件只能有一个&lt;code&gt;init&lt;/code&gt;函数。&lt;/p&gt;
+&lt;h3 id=&quot;const类型&quot;&gt;&lt;a href=&quot;#const类型&quot; class=&quot;headerlink&quot; title=&quot;const类型&quot;&gt;&lt;/a&gt;&lt;code&gt;const&lt;/code&gt;类型&lt;/h3&gt;&lt;p&gt;没有定义类型的const对象，可以在第一次被使用时确定类型。确定后该常量将无法再隐式转为其他类型。&lt;/p&gt;
+&lt;figure class=&quot;highlight golang&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;6&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;const&lt;/span&gt; aa, bb, cc = &lt;span class=&quot;string&quot;&gt;&amp;quot;eat&amp;quot;&lt;/span&gt;, &lt;span class=&quot;number&quot;&gt;2&lt;/span&gt;, &lt;span class=&quot;string&quot;&gt;&amp;quot;ok&amp;quot;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;const&lt;/span&gt; (&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    a = &lt;span class=&quot;literal&quot;&gt;iota&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    b&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    c&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;)&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+
+&lt;h3 id=&quot;默认值&quot;&gt;&lt;a href=&quot;#默认值&quot; class=&quot;headerlink&quot; title=&quot;默认值&quot;&gt;&lt;/a&gt;默认值&lt;/h3&gt;&lt;p&gt;golang中所有的变量都是初始化过的。&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th align=&quot;left&quot;&gt;类型&lt;/th&gt;
+&lt;th align=&quot;left&quot;&gt;初始值&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;&lt;tr&gt;
+&lt;td align=&quot;left&quot;&gt;int&lt;/td&gt;
+&lt;td align=&quot;left&quot;&gt;&lt;code&gt;0&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td align=&quot;left&quot;&gt;float&lt;/td&gt;
+&lt;td align=&quot;left&quot;&gt;&lt;code&gt;0.0&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td align=&quot;left&quot;&gt;bool&lt;/td&gt;
+&lt;td align=&quot;left&quot;&gt;&lt;code&gt;false&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td align=&quot;left&quot;&gt;string&lt;/td&gt;
+&lt;td align=&quot;left&quot;&gt;&lt;code&gt;&amp;quot;&amp;quot;&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td align=&quot;left&quot;&gt;pointer&lt;/td&gt;
+&lt;td align=&quot;left&quot;&gt;&lt;code&gt;nil&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;&lt;/table&gt;
+&lt;h3 id=&quot;变量赋值&quot;&gt;&lt;a href=&quot;#变量赋值&quot; class=&quot;headerlink&quot; title=&quot;变量赋值&quot;&gt;&lt;/a&gt;变量赋值&lt;/h3&gt;&lt;figure class=&quot;highlight golang&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;var&lt;/span&gt; a, b, c &lt;span class=&quot;keyword&quot;&gt;int&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;a, b, c = &lt;span class=&quot;number&quot;&gt;1&lt;/span&gt;, &lt;span class=&quot;number&quot;&gt;2&lt;/span&gt;, &lt;span class=&quot;number&quot;&gt;3&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;a, b = b, a&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+
+&lt;h3 id=&quot;fmt&quot;&gt;&lt;a href=&quot;#fmt&quot; class=&quot;headerlink&quot; title=&quot;fmt&quot;&gt;&lt;/a&gt;&lt;code&gt;fmt&lt;/code&gt;&lt;/h3&gt;&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th align=&quot;right&quot;&gt;fmt&lt;/th&gt;
+&lt;th align=&quot;left&quot;&gt;意义&lt;/th&gt;
+&lt;th align=&quot;right&quot;&gt;例子&lt;/th&gt;
+&lt;th align=&quot;left&quot;&gt;输出&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;&lt;tr&gt;
+&lt;td align=&quot;right&quot;&gt;%d&lt;/td&gt;
+&lt;td align=&quot;left&quot;&gt;整数&lt;/td&gt;
+&lt;td align=&quot;right&quot;&gt;&lt;code&gt;fmt.Printf(&amp;quot;%d&amp;quot;, 3)&lt;/code&gt;&lt;/td&gt;
+&lt;td align=&quot;left&quot;&gt;3&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td align=&quot;right&quot;&gt;%x&lt;/td&gt;
+&lt;td align=&quot;left&quot;&gt;16进制&lt;/td&gt;
+&lt;td align=&quot;right&quot;&gt;&lt;code&gt;fmt.Printf(&amp;quot;%x&amp;quot;, 11)&lt;/code&gt;&lt;/td&gt;
+&lt;td align=&quot;left&quot;&gt;b&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td align=&quot;right&quot;&gt;%X&lt;/td&gt;
+&lt;td align=&quot;left&quot;&gt;16进制&lt;/td&gt;
+&lt;td align=&quot;right&quot;&gt;&lt;code&gt;fmt.Printf(&amp;quot;%X&amp;quot;,11)&lt;/code&gt;&lt;/td&gt;
+&lt;td align=&quot;left&quot;&gt;B&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td align=&quot;right&quot;&gt;%.mg&lt;/td&gt;
+&lt;td align=&quot;left&quot;&gt;保留几位有效数字&lt;/td&gt;
+&lt;td align=&quot;right&quot;&gt;&lt;code&gt;fmt.Printf(&amp;quot;%.5g&amp;quot;, 1234.5678)&lt;/code&gt;&lt;/td&gt;
+&lt;td align=&quot;left&quot;&gt;1234.6&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td align=&quot;right&quot;&gt;%f&lt;/td&gt;
+&lt;td align=&quot;left&quot;&gt;浮点数&lt;/td&gt;
+&lt;td align=&quot;right&quot;&gt;&lt;code&gt;fmt.Printf(&amp;quot;%f&amp;quot;, 1234.5678)&lt;/code&gt;&lt;/td&gt;
+&lt;td align=&quot;left&quot;&gt;1234.567800&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td align=&quot;right&quot;&gt;%e&lt;/td&gt;
+&lt;td align=&quot;left&quot;&gt;科学计数&lt;/td&gt;
+&lt;td align=&quot;right&quot;&gt;&lt;code&gt;fmt.Printf(&amp;quot;%e&amp;quot;, 1234.5678)&lt;/code&gt;&lt;/td&gt;
+&lt;td align=&quot;left&quot;&gt;1.234568e+03&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;&lt;/table&gt;
+&lt;h3 id=&quot;数字强转&quot;&gt;&lt;a href=&quot;#数字强转&quot; class=&quot;headerlink&quot; title=&quot;数字强转&quot;&gt;&lt;/a&gt;数字强转&lt;/h3&gt;&lt;p&gt;浮点类型强转int时采用截断的方式：&lt;/p&gt;
+&lt;figure class=&quot;highlight golang&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;var&lt;/span&gt; := &lt;span class=&quot;number&quot;&gt;3.9&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;fmt.Printf(&lt;span class=&quot;string&quot;&gt;&amp;quot;%d&amp;quot;&lt;/span&gt;, &lt;span class=&quot;keyword&quot;&gt;int32&lt;/span&gt;(a))&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;gt; &lt;span class=&quot;number&quot;&gt;3&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;</summary>
     
     
     

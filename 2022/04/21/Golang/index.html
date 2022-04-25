@@ -1,3 +1,92 @@
 <!DOCTYPE html><html><head><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><title> Golang Tips · Notebook</title><meta name="description" content="Golang Tips - Simon Ren"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="icon" href="/favicon.png"><link rel="stylesheet" href="/css/apollo.css"><link rel="search" type="application/opensearchdescription+xml" href="http://yoursite.com/atom.xml" title="Notebook"><meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="Notebook" type="application/atom+xml">
-</head><body><div class="wrap"><header><a href="/" class="logo-link"><img src="/favicon.png" alt="logo"></a><ul class="nav nav-list"><li class="nav-list-item"><a href="/" target="_self" class="nav-list-link">BLOG</a></li><li class="nav-list-item"><a href="/archives/" target="_self" class="nav-list-link">ARCHIVE</a></li></ul></header><main class="container"><div class="post"><article class="post-block"><h1 class="post-title">Golang Tips</h1><div class="post-info">Apr 21, 2022</div><div class="post-content"><p>So, here we go</p>
-<span id="more"></span></div></article></div></main><footer><div class="paginator"><a href="/2019/01/17/Cocos2dx/" class="next">NEXT</a></div><div class="copyright"><p>© 2015 - 2022 <a href="http://yoursite.com">Simon Ren</a>, powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and <a href="https://github.com/pinggod/hexo-theme-apollo" target="_blank">hexo-theme-apollo</a>.</p></div></footer></div><script async src="//cdn.bootcss.com/mathjax/2.7.0/MathJax.js?config=TeX-MML-AM_CHTML" integrity="sha384-crwIf/BuaWM9rM65iM+dWFldgQ1Un8jWZMuh3puxb8TOY9+linwLoI7ZHZT+aekW" crossorigin="anonymous"></script></body></html>
+</head><body><div class="wrap"><header><a href="/" class="logo-link"><img src="/favicon.png" alt="logo"></a><ul class="nav nav-list"><li class="nav-list-item"><a href="/" target="_self" class="nav-list-link">BLOG</a></li><li class="nav-list-item"><a href="/archives/" target="_self" class="nav-list-link">ARCHIVE</a></li></ul></header><main class="container"><div class="post"><article class="post-block"><h1 class="post-title">Golang Tips</h1><div class="post-info">Apr 21, 2022</div><div class="post-content"><h3 id="Go程序执行顺序"><a href="#Go程序执行顺序" class="headerlink" title="Go程序执行顺序"></a>Go程序执行顺序</h3><p>按顺序导入所有被<code>main</code>包引用的包，并为每个包执行<code>init</code>函数。导入包完成后，为<code>main</code>执行<code>init</code>函数，并开始启动<code>main</code>。</p>
+<h3 id="init函数"><a href="#init函数" class="headerlink" title="init函数"></a><code>init</code>函数</h3><p><code>init</code>函数无参数，无返回值，优先于<code>main</code>函数执行。初始化时总是单线程执行，并且严格按照包的依赖关系进行。每个源文件只能有一个<code>init</code>函数。</p>
+<h3 id="const类型"><a href="#const类型" class="headerlink" title="const类型"></a><code>const</code>类型</h3><p>没有定义类型的const对象，可以在第一次被使用时确定类型。确定后该常量将无法再隐式转为其他类型。</p>
+<figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> aa, bb, cc = <span class="string">&quot;eat&quot;</span>, <span class="number">2</span>, <span class="string">&quot;ok&quot;</span></span><br><span class="line"><span class="keyword">const</span> (</span><br><span class="line">    a = <span class="literal">iota</span></span><br><span class="line">    b</span><br><span class="line">    c</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<h3 id="默认值"><a href="#默认值" class="headerlink" title="默认值"></a>默认值</h3><p>golang中所有的变量都是初始化过的。</p>
+<table>
+<thead>
+<tr>
+<th align="left">类型</th>
+<th align="left">初始值</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">int</td>
+<td align="left"><code>0</code></td>
+</tr>
+<tr>
+<td align="left">float</td>
+<td align="left"><code>0.0</code></td>
+</tr>
+<tr>
+<td align="left">bool</td>
+<td align="left"><code>false</code></td>
+</tr>
+<tr>
+<td align="left">string</td>
+<td align="left"><code>&quot;&quot;</code></td>
+</tr>
+<tr>
+<td align="left">pointer</td>
+<td align="left"><code>nil</code></td>
+</tr>
+</tbody></table>
+<h3 id="变量赋值"><a href="#变量赋值" class="headerlink" title="变量赋值"></a>变量赋值</h3><figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> a, b, c <span class="keyword">int</span></span><br><span class="line">a, b, c = <span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span></span><br><span class="line">a, b = b, a</span><br></pre></td></tr></table></figure>
+
+<h3 id="fmt"><a href="#fmt" class="headerlink" title="fmt"></a><code>fmt</code></h3><table>
+<thead>
+<tr>
+<th align="right">fmt</th>
+<th align="left">意义</th>
+<th align="right">例子</th>
+<th align="left">输出</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="right">%d</td>
+<td align="left">整数</td>
+<td align="right"><code>fmt.Printf(&quot;%d&quot;, 3)</code></td>
+<td align="left">3</td>
+</tr>
+<tr>
+<td align="right">%x</td>
+<td align="left">16进制</td>
+<td align="right"><code>fmt.Printf(&quot;%x&quot;, 11)</code></td>
+<td align="left">b</td>
+</tr>
+<tr>
+<td align="right">%X</td>
+<td align="left">16进制</td>
+<td align="right"><code>fmt.Printf(&quot;%X&quot;,11)</code></td>
+<td align="left">B</td>
+</tr>
+<tr>
+<td align="right">%.mg</td>
+<td align="left">保留几位有效数字</td>
+<td align="right"><code>fmt.Printf(&quot;%.5g&quot;, 1234.5678)</code></td>
+<td align="left">1234.6</td>
+</tr>
+<tr>
+<td align="right">%f</td>
+<td align="left">浮点数</td>
+<td align="right"><code>fmt.Printf(&quot;%f&quot;, 1234.5678)</code></td>
+<td align="left">1234.567800</td>
+</tr>
+<tr>
+<td align="right">%e</td>
+<td align="left">科学计数</td>
+<td align="right"><code>fmt.Printf(&quot;%e&quot;, 1234.5678)</code></td>
+<td align="left">1.234568e+03</td>
+</tr>
+</tbody></table>
+<h3 id="数字强转"><a href="#数字强转" class="headerlink" title="数字强转"></a>数字强转</h3><p>浮点类型强转int时采用截断的方式：</p>
+<figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> := <span class="number">3.9</span></span><br><span class="line">fmt.Printf(<span class="string">&quot;%d&quot;</span>, <span class="keyword">int32</span>(a))</span><br><span class="line"></span><br><span class="line">&gt; <span class="number">3</span></span><br></pre></td></tr></table></figure>
+
+<span id="more"></span>
+
+<h3 id="字符串"><a href="#字符串" class="headerlink" title="字符串"></a>字符串</h3><figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">unicode.IsLetter(ch) <span class="comment">// 是否为字母</span></span><br><span class="line">unicode.IsDigit(ch) <span class="comment">// 是否为数字</span></span><br><span class="line">unicode.IsSpace(ch) <span class="comment">// 是否为空格</span></span><br><span class="line"></span><br><span class="line">s3 := s1 + s2</span><br><span class="line"></span><br><span class="line">strings.HasPrefix(s, prefix <span class="keyword">string</span>) <span class="keyword">bool</span></span><br><span class="line">strings.HasSuffix(s, suffix <span class="keyword">string</span>) <span class="keyword">bool</span></span><br><span class="line">strings.Contains(s, substr <span class="keyword">string</span>) <span class="keyword">bool</span></span><br><span class="line">strings.Index(s, str <span class="keyword">string</span>) <span class="keyword">int</span></span><br><span class="line">strings.LastIndex(s, str <span class="keyword">string</span>) <span class="keyword">int</span></span><br><span class="line">strings.Replace(str, old, <span class="built_in">new</span>, n) <span class="keyword">string</span> <span class="comment">// (n == -1 replace all )</span></span><br><span class="line">strings.Count(s, str <span class="keyword">string</span>) <span class="keyword">int</span></span><br><span class="line">strings.Repeat(s, count <span class="keyword">int</span>) <span class="keyword">string</span></span><br><span class="line">strings.ToLower(s) <span class="keyword">string</span></span><br><span class="line">strings.ToUpper(s) <span class="keyword">string</span></span><br><span class="line"></span><br><span class="line">strings.TrimSpace(s) <span class="keyword">string</span> <span class="comment">// 剔除开头和结尾的空白符号</span></span><br><span class="line">strings.Trim(s, <span class="string">&quot;cut&quot;</span>) <span class="keyword">string</span> <span class="comment">// 剔除开头和结尾的指定字符</span></span><br><span class="line">strings.TrimLeft(s, <span class="string">&quot;cut&quot;</span>) <span class="keyword">string</span></span><br><span class="line">strings.TrimRight(s, <span class="string">&quot;cut&quot;</span>) <span class="keyword">string</span></span><br><span class="line"></span><br><span class="line">strings.Fields(s) []<span class="keyword">string</span> <span class="comment">// split with space</span></span><br><span class="line">strings.Split(s, sep) []<span class="keyword">string</span> <span class="comment">// split with sep</span></span><br><span class="line">strings.Join(sl []<span class="keyword">string</span>, sep <span class="keyword">string</span>) <span class="keyword">string</span> <span class="comment">// join with sep</span></span><br></pre></td></tr></table></figure>
+
+<p><code>strconv</code>包含有所有和字符串相关的转换，任何类型车字符串总是成功的。</p>
+</div></article></div></main><footer><div class="paginator"><a href="/2019/01/17/Cocos2dx/" class="next">NEXT</a></div><div class="copyright"><p>© 2015 - 2022 <a href="http://yoursite.com">Simon Ren</a>, powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and <a href="https://github.com/pinggod/hexo-theme-apollo" target="_blank">hexo-theme-apollo</a>.</p></div></footer></div><script async src="//cdn.bootcss.com/mathjax/2.7.0/MathJax.js?config=TeX-MML-AM_CHTML" integrity="sha384-crwIf/BuaWM9rM65iM+dWFldgQ1Un8jWZMuh3puxb8TOY9+linwLoI7ZHZT+aekW" crossorigin="anonymous"></script></body></html>
