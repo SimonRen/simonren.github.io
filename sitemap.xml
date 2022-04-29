@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://yoursite.com/2022/04/29/k8s/</loc>
+    
+    <lastmod>2022-04-29</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://yoursite.com/2022/04/28/Docker/</loc>
     
     <lastmod>2022-04-28</lastmod>
@@ -109,7 +116,7 @@
 
   <url>
     <loc>http://yoursite.com/</loc>
-    <lastmod>2022-04-28</lastmod>
+    <lastmod>2022-04-29</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
@@ -117,14 +124,21 @@
   
   <url>
     <loc>http://yoursite.com/tags/golang/</loc>
-    <lastmod>2022-04-28</lastmod>
+    <lastmod>2022-04-29</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>http://yoursite.com/tags/golang-docker/</loc>
-    <lastmod>2022-04-28</lastmod>
+    <lastmod>2022-04-29</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://yoursite.com/tags/k8s-docker/</loc>
+    <lastmod>2022-04-29</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
